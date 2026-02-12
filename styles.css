@@ -2,14 +2,50 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
+  font-family: Arial, sans-serif;
 }
 
 #map {
-  width: 100%;
+  width: 70%;
   height: 100vh;
+  float: left;
 }
 
-.leaflet-tooltip {
-  font-size: 14px;
+#info-panel {
+  width: 30%;
+  height: 100vh;
+  float: right;
+  background: #f9f9f9;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  border-left: 1px solid #ddd;
 }
 
+.legend {
+  margin-top: 20px;
+}
+
+.legend div {
+  margin-bottom: 6px;
+}
+
+.color-box {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.infant { background: #FF0000; }
+.baby { background: #FFA500; }
+.young { background: #FFFF00; }
+.mature { background: #008000; }
+.old { background: #0000FF; }
+.unknown { background: #333333; }
+
+.bar {
+  height: 12px;
+  margin-bottom: 6px;
+}
