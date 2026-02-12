@@ -92,3 +92,21 @@ input[type="text"], select {
     border-top: 1px solid #ddd;
   }
 }
+.methodology {
+  font-size: 12px;
+  margin-top: 20px;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #ddd;
+}
+
+.methodology h4 {
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+
+.methodology ul {
+  padding-left: 16px;
+  margin: 5px 0 0 0;
+}
+
