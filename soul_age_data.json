@@ -1,1 +1,33 @@
+[
+  {
+    "country": "Mexico",
+    "iso": "MEX",
+    "infant": 0,
+    "baby": 50,
+    "young": 0,
+    "mature": 50,
+    "old": 0,
+    "notes": "True 50/50 Baby–Mature split"
+  },
+  {
+    "country": "France",
+    "iso": "FRA",
+    "infant": 0,
+    "baby": 0,
+    "young": 50,
+    "mature": 50,
+    "old": 0,
+    "notes": "True 50/50 Mature–Young split"
+  },
+  {
+    "country": "United States",
+    "iso": "USA",
+    "infant": 0,
+    "baby": 30,
+    "young": 40,
+    "mature": 30,
+    "old": 0,
+    "notes": "Example distribution"
+  }
+]
 
