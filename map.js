@@ -49,6 +49,17 @@ function blendColor(data) {
   );
 }
 
+// Create visual bar for side panel
+function createBar(label, value, color) {
+  if (!value || value === 0) return "";
+  return `
+    <div>
+      <strong>${label}: ${value}%</strong>
+      <div class="bar" style="width:${value}%; background:${color};"></div>
+    </div>
+  `;
+}
+
 // Initialize map
 const map = L.map("map", {
   zoomControl: true,
@@ -85,20 +96,34 @@ Promise.all([
   function onEachFeature(feature, layer) {
     const data = soulLookup[feature.id];
 
+    // Hover tooltip (lightweight)
     if (data) {
-      const breakdown = `
-        <strong>${data.country}</strong><br>
-        Infant: ${data.infant || 0}%<br>
-        Baby: ${data.baby || 0}%<br>
-        Young: ${data.young || 0}%<br>
-        Mature: ${data.mature || 0}%<br>
-        Old: ${data.old || 0}%<br>
-        <em>${data.notes || ""}</em>
-      `;
-      layer.bindTooltip(breakdown);
+      layer.bindTooltip(`<strong>${data.country}</strong>`);
     } else {
-      layer.bindTooltip(`<strong>${feature.properties.name}</strong><br>No data`);
+      layer.bindTooltip(`<strong>${feature.properties.name}</strong>`);
     }
+
+    // Click interaction for side panel
+    layer.on("click", function () {
+      const panel = document.getElementById("country-details");
+
+      if (data) {
+        panel.innerHTML = `
+          <h3>${data.country}</h3>
+          ${createBar("Infant", data.infant, soulColors.infant)}
+          ${createBar("Baby", data.baby, soulColors.baby)}
+          ${createBar("Young", data.young, soulColors.young)}
+          ${createBar("Mature", data.mature, soulColors.mature)}
+          ${createBar("Old", data.old, soulColors.old)}
+          <p><em>${data.notes || ""}</em></p>
+        `;
+      } else {
+        panel.innerHTML = `
+          <h3>${feature.properties.name}</h3>
+          <p>No data available.</p>
+        `;
+      }
+    });
   }
 
   L.geoJSON(geoData, {
@@ -106,4 +131,3 @@ Promise.all([
     onEachFeature
   }).addTo(map);
 });
-
