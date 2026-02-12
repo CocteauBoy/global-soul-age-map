@@ -7,7 +7,9 @@ const soulColors = {
   unknown: "#333333"
 };
 
-// Convert hex to RGB
+let primaryOnly = false;
+let currentFilter = "all";
+
 function hexToRgb(hex) {
   const bigint = parseInt(hex.slice(1), 16);
   return {
@@ -17,15 +19,32 @@ function hexToRgb(hex) {
   };
 }
 
-// Convert RGB to hex
 function rgbToHex(r, g, b) {
   return "#" + [r, g, b]
     .map(x => x.toString(16).padStart(2, "0"))
     .join("");
 }
 
-// Weighted color blending
+function getPrimaryAge(data) {
+  let max = 0;
+  let primary = null;
+
+  ["infant", "baby", "young", "mature", "old"].forEach(age => {
+    if ((data[age] || 0) > max) {
+      max = data[age];
+      primary = age;
+    }
+  });
+
+  return primary;
+}
+
 function blendColor(data) {
+  if (primaryOnly) {
+    const primary = getPrimaryAge(data);
+    return primary ? soulColors[primary] : soulColors.unknown;
+  }
+
   let total = 0;
   let r = 0, g = 0, b = 0;
 
@@ -49,9 +68,8 @@ function blendColor(data) {
   );
 }
 
-// Create visual bar for side panel
 function createBar(label, value, color) {
-  if (!value || value === 0) return "";
+  if (!value) return "";
   return `
     <div>
       <strong>${label}: ${value}%</strong>
@@ -60,17 +78,12 @@ function createBar(label, value, color) {
   `;
 }
 
-// Initialize map
-const map = L.map("map", {
-  zoomControl: true,
-  attributionControl: false
-}).setView([20, 0], 2);
+const map = L.map("map").setView([20, 0], 2);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 6
 }).addTo(map);
 
-// Load data
 Promise.all([
   fetch("world.geojson").then(res => res.json()),
   fetch("soul_age_data.json").then(res => res.json())
@@ -83,10 +96,25 @@ Promise.all([
 
   function style(feature) {
     const data = soulLookup[feature.id];
-    const fillColor = data ? blendColor(data) : soulColors.unknown;
+
+    if (!data) return {
+      fillColor: soulColors.unknown,
+      weight: 1,
+      color: "#222",
+      fillOpacity: 0.6
+    };
+
+    if (currentFilter !== "all" && !(data[currentFilter] > 0)) {
+      return {
+        fillColor: "#eeeeee",
+        weight: 1,
+        color: "#999",
+        fillOpacity: 0.4
+      };
+    }
 
     return {
-      fillColor: fillColor,
+      fillColor: blendColor(data),
       weight: 1,
       color: "#222",
       fillOpacity: 0.85
@@ -96,14 +124,6 @@ Promise.all([
   function onEachFeature(feature, layer) {
     const data = soulLookup[feature.id];
 
-    // Hover tooltip (lightweight)
-    if (data) {
-      layer.bindTooltip(`<strong>${data.country}</strong>`);
-    } else {
-      layer.bindTooltip(`<strong>${feature.properties.name}</strong>`);
-    }
-
-    // Click interaction for side panel
     layer.on("click", function () {
       const panel = document.getElementById("country-details");
 
@@ -118,16 +138,35 @@ Promise.all([
           <p><em>${data.notes || ""}</em></p>
         `;
       } else {
-        panel.innerHTML = `
-          <h3>${feature.properties.name}</h3>
-          <p>No data available.</p>
-        `;
+        panel.innerHTML = `<h3>${feature.properties.name}</h3><p>No data available.</p>`;
       }
     });
   }
 
-  L.geoJSON(geoData, {
+  const geoLayer = L.geoJSON(geoData, {
     style,
     onEachFeature
   }).addTo(map);
+
+  document.getElementById("primary-toggle").addEventListener("change", e => {
+    primaryOnly = e.target.checked;
+    geoLayer.setStyle(style);
+  });
+
+  document.getElementById("age-filter").addEventListener("change", e => {
+    currentFilter = e.target.value;
+    geoLayer.setStyle(style);
+  });
+
+  document.getElementById("search").addEventListener("input", function () {
+    const value = this.value.toLowerCase();
+    geoLayer.eachLayer(layer => {
+      const name = layer.feature.properties.name.toLowerCase();
+      if (name.includes(value)) {
+        layer.setStyle({ weight: 3 });
+        map.fitBounds(layer.getBounds());
+      }
+    });
+  });
+
 });
