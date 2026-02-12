@@ -1,51 +1,64 @@
 <!DOCTYPE html>
-<html> 
+<html>
 <head>
   <meta charset="utf-8" />
   <title>Global Soul Age Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Leaflet CSS -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   />
-
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<body>
+<div id="map"></div>
 
-  <div id="map"></div>
+<div id="info-panel">
+  <h2>Global Soul Age Map</h2>
 
-  <div id="info-panel">
-    <h2>Global Soul Age Map</h2>
-    <p>
-      Explore the evolving distribution of soul ages across countries.
-      Click a country to view its composition.
-    </p>
+  <p class="meta">
+    Version 1.0 · Last Updated: <span id="last-updated">January 2026</span>
+  </p>
 
-    <div class="legend">
-      <div><span class="color-box infant"></span> Infant</div>
-      <div><span class="color-box baby"></span> Baby</div>
-      <div><span class="color-box young"></span> Young</div>
-      <div><span class="color-box mature"></span> Mature</div>
-      <div><span class="color-box old"></span> Old</div>
-      <div><span class="color-box unknown"></span> Unknown</div>
-    </div>
+  <input type="text" id="search" placeholder="Search country..." />
 
-    <div id="country-details">
-      <p>Click a country to explore.</p>
-    </div>
+  <div class="toggle-group">
+    <label>
+      <input type="checkbox" id="primary-toggle" />
+      Show Primary Only
+    </label>
   </div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="map.js"></script>
+  <div class="filter-group">
+    <strong>Highlight Soul Age:</strong>
+    <select id="age-filter">
+      <option value="all">All</option>
+      <option value="infant">Infant</option>
+      <option value="baby">Baby</option>
+      <option value="young">Young</option>
+      <option value="mature">Mature</option>
+      <option value="old">Old</option>
+    </select>
+  </div>
 
-</body>
+  <div class="legend">
+    <div><span class="color-box infant"></span> Infant</div>
+    <div><span class="color-box baby"></span> Baby</div>
+    <div><span class="color-box young"></span> Young</div>
+    <div><span class="color-box mature"></span> Mature</div>
+    <div><span class="color-box old"></span> Old</div>
+    <div><span class="color-box unknown"></span> Unknown</div>
+  </div>
 
+  <div id="country-details">
+    <p>Click a country to explore.</p>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="map.js"></script>
 
 </body>
 </html>
-
