@@ -15,11 +15,36 @@
 </head>
 <body>
 
+<body>
+
   <div id="map"></div>
 
-  <!-- Leaflet JS -->
+  <div id="info-panel">
+    <h2>Global Soul Age Map</h2>
+    <p>
+      Explore the evolving distribution of soul ages across countries.
+      Click a country to view its composition.
+    </p>
+
+    <div class="legend">
+      <div><span class="color-box infant"></span> Infant</div>
+      <div><span class="color-box baby"></span> Baby</div>
+      <div><span class="color-box young"></span> Young</div>
+      <div><span class="color-box mature"></span> Mature</div>
+      <div><span class="color-box old"></span> Old</div>
+      <div><span class="color-box unknown"></span> Unknown</div>
+    </div>
+
+    <div id="country-details">
+      <p>Click a country to explore.</p>
+    </div>
+  </div>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="map.js"></script>
+
+</body>
+
 
 </body>
 </html>
